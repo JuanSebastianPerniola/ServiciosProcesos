@@ -4,7 +4,7 @@ public class Cubierto {
     
     private boolean disponible = true;
     public synchronized void Tomar(){
-        while (disponible){
+        while (!disponible){
             try {
                 // Esperarr hasta que el cubierto este libre
                 wait();

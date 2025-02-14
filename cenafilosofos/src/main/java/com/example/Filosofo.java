@@ -28,21 +28,33 @@ public class Filosofo extends Thread {
 	}
 
 	private void Comer() {
-		System.out.println(nombre + " Agarrar cubierto de la izquierda");
-		Esperar(rand.nextInt(400, 600));
+		while (true) {
+			try {
+				System.out.println(nombre + "esta pensando");
+				Thread.sleep(1000);
+				System.out.println(nombre + " intenta tomar los cubiertos");
 
-		synchronized (izq) {
-			System.out.println(nombre + " Ahora agarrae cubierto de la derecha");
-			Esperar(rand.nextInt(400, 600));
+				// has code => entra al codigo de filo < al de desp porque se a ejecutado
+				// crucial para inter bloqueo
+				// orden total para repartir los recursos
+				// De la manera siguiente se obliga a los filosofos en tomar los cubiertos en orden
+				if(izq.hashCode() < der.hashCode()){
+					izq.Tomar();
+					der.Tomar();
+				}else{
+					der.Tomar();
+					izq.Tomar();
+				}
 
-			synchronized (der) {
-				System.out.println(nombre + " agarra el cubierto de la derecha");
-				System.out.println(nombre + " Comer");
-				Esperar(rand.nextInt(2000, 3000));
+				Thread.sleep(1000);
+				System.out.println(nombre + " esta comiendo");
+				System.out.println(nombre + " suelta los cubiertos...");
+                izq.Soltar();
+                der.Soltar();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			System.out.println(nombre + " Cedo mi cubierto derecho");
 		}
-		System.out.println(nombre + " Dejo cubierto izquierdo");
 	}
 
 	private void Esperar(int ms) {
